@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<sdf version="1.9">
+
+  <world name="environment">
+
+    <model name="ground_plane">
+      <static>true</static>
+    </model>
+    
+  </world>
+</sdf>

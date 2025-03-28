@@ -1,0 +1,211 @@
+<?xml version="1.0"?>
+
+<!--
+  CS22B1090
+  Shubh Khandelwal
+-->
+
+<robot name="manipulator" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find manipulator_description)/urdf/materials.xacro"/>
+  <xacro:include filename="$(find manipulator_description)/urdf/cylinder.xacro"/>
+  <xacro:include filename="$(find manipulator_description)/urdf/sphere.xacro"/>
+
+  <link name="world"/>
+
+  <xacro:CYLINDER
+  link_name="link_0"
+  link_material="blue"
+  link_density="7850"
+  link_length="0.1"
+  link_radius="0.2"
+  />
+
+  <xacro:CYLINDER
+  link_name="link_1"
+  link_material="red"
+  link_density="2700"
+  link_length="0.4"
+  link_radius="0.04"
+  />
+
+  <xacro:SPHERE
+  link_name="link_2"
+  link_material="green"
+  link_density="1050"
+  link_radius="0.05"
+  link_centre="0.43"
+  />
+
+  <xacro:CYLINDER
+  link_name="link_3"
+  link_material="red"
+  link_density="2700"
+  link_length="0.3"
+  link_radius="0.04"
+  />
+
+  <xacro:SPHERE
+  link_name="link_4"
+  link_material="green"
+  link_density="1050"
+  link_radius="0.05"
+  link_centre="0.33"
+  />
+
+  <xacro:CYLINDER
+  link_name="link_5"
+  link_material="red"
+  link_density="2700"
+  link_length="0.3"
+  link_radius="0.04"
+  />
+
+  <xacro:SPHERE
+  link_name="link_6"
+  link_material="green"
+  link_density="1050"
+  link_radius="0.05"
+  link_centre="0.33"
+  />
+
+  <xacro:CYLINDER
+  link_name="link_7"
+  link_material="red"
+  link_density="2700"
+  link_length="0.2"
+  link_radius="0.04"
+  />
+
+  <xacro:SPHERE
+  link_name="link_8"
+  link_material="green"
+  link_density="1050"
+  link_radius="0.05"
+  link_centre="0.23"
+  />
+
+  <joint name="joint_world" type="fixed">
+    <parent link="world"/>
+    <child link="link_0"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <joint name="joint_01" type="continuous">
+    <parent link="link_0"/>
+    <child link="link_1"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <joint name="joint_12" type="fixed">
+    <parent link="link_1"/>
+    <child link="link_2"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <joint name="joint_23" type="revolute">
+    <parent link="link_2"/>
+    <child link="link_3"/>
+    <origin xyz="0 0 0.43" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="0" upper="1.571" effort="10" velocity="1.0"/>
+  </joint>
+
+  <joint name="joint_34" type="fixed">
+    <parent link="link_3"/>
+    <child link="link_4"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <joint name="joint_45" type="revolute">
+    <parent link="link_4"/>
+    <child link="link_5"/>
+    <origin xyz="0 0 0.33" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="0" upper="1.571" effort="10" velocity="1.0"/>
+  </joint>
+
+  <joint name="joint_56" type="fixed">
+    <parent link="link_5"/>
+    <child link="link_6"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <joint name="joint_67" type="revolute">
+    <parent link="link_6"/>
+    <child link="link_7"/>
+    <origin xyz="0 0 0.33" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="0" upper="1.571" effort="10" velocity="1.0"/>
+  </joint>
+
+  <joint name="joint_78" type="fixed">
+    <parent link="link_7"/>
+    <child link="link_8"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <ros2_control name="manipulator_controller" type="system">
+
+    <hardware>
+      <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+    </hardware>
+
+    <joint name="joint_01">
+      <command_interface name="position">
+        <param name="min">-3.142</param>
+        <param name="max">3.142</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.000</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="joint_23">
+      <command_interface name="position">
+        <param name="min">0.000</param>
+        <param name="max">1.571</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.000</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="joint_45">
+      <command_interface name="position">
+        <param name="min">0.000</param>
+        <param name="max">1.571</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.000</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="joint_67">
+      <command_interface name="position">
+        <param name="min">0.000</param>
+        <param name="max">1.571</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.000</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+
+  </ros2_control>
+
+  <gazebo reference="world">
+    <static>true</static>
+  </gazebo>
+
+  <gazebo>
+    <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+      <parameters>$(find manipulator_gz)/config/manipulator_controller.yaml</parameters>
+    </plugin>
+  </gazebo>
+
+</robot>

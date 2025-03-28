@@ -1,0 +1,30 @@
+controller_manager:
+
+  ros__parameters:
+
+    lock_memory: false
+    update_rate: 100
+    use_sim_time: true
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+    
+    manipulator_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+manipulator_controller:
+
+  ros__parameters:
+
+    joints:
+      - joint_01
+      - joint_23
+      - joint_45
+      - joint_67
+    
+    command_interfaces:
+      - position
+    
+    state_interfaces:
+      - position
+      - velocity
