@@ -23,6 +23,12 @@ def generate_launch_description():
         output='screen'
     )
 
+    gz_bridge_node = Node(
+        package='manipulator_gz',
+        executable='gz_bridge_node',
+        output='screen'
+    )
+
     controller_node = Node(
         package='controller_manager',
         executable='ros2_control_node',
@@ -43,6 +49,7 @@ def generate_launch_description():
     return LaunchDescription([
         gazebo_node,
         spawn_entity_node,
+        gz_bridge_node,
         controller_node,
         joint_state_broadcaster_node,
         manipulator_controller_node

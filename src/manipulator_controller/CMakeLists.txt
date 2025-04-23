@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(manipulator_gz)
+project(manipulator_controller)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -7,21 +7,15 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(std_msgs REQUIRED)
-find_package(trajectory_msgs REQUIRED)
-
-add_executable(gz_bridge_node src/gz_bridge_node.cpp)
-ament_target_dependencies(gz_bridge_node rclcpp std_msgs trajectory_msgs)
 
 install(
-  TARGETS gz_bridge_node
-  DESTINATION lib/${PROJECT_NAME}
+  DIRECTORY launch models scripts
+  DESTINATION share/${PROJECT_NAME}
 )
 
 install(
-  DIRECTORY config launch src worlds
-  DESTINATION share/${PROJECT_NAME}
+  PROGRAMS scripts/controller.py scripts/trainer.py
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 if(BUILD_TESTING)
