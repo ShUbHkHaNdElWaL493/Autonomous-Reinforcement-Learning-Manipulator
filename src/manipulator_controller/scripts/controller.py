@@ -28,11 +28,11 @@ class ManipulatorEnv(gym.Env):
         self.upper_limits = np.array([3.142, 1.571, 1.571, 1.571], dtype = np.float32)
 
         self.observation_space = gym.spaces.Box(
-            low=np.array([-np.inf, -np.inf, -np.inf], dtype=np.float32),
-            high=np.array([np.inf, np.inf, np.inf], dtype=np.float32),
-            dtype=np.float32
+            low = np.array([-np.inf, -np.inf, -np.inf], dtype = np.float32),
+            high = np.array([np.inf, np.inf, np.inf], dtype = np.float32),
+            dtype = np.float32
         )
-        self.action_space = gym.spaces.MultiDiscrete([3] * 4)
+        self.action_space = gym.spaces.Discrete(81)
 
         self.joint_states = np.zeros(4, dtype = np.float32)
         self.gripper_state = np.zeros(3, dtype = np.float32)
@@ -41,9 +41,9 @@ class ManipulatorEnv(gym.Env):
         self.steps = 0
         
     def reset(self, seed = None, options = None):
-        super().reset(seed=seed)
-        self.joint_states = np.zeros(4, dtype = np.float32)
-        self.goal_state = np.random.uniform(low = -0.4, high = 0.4, size = (3, )).astype(np.float32)
+        super().reset(seed = seed)
+        self.joint_states = np.random.uniform(low = self.lower_limits, high = self.upper_limits, size = (4, )).astype(np.float32)
+        np.round(self.goal_state, decimals=2)
         self.steps = 0
         time.sleep(0.001)
         self.initial_d = np.sqrt(np.sum((self.gripper_state - self.goal_state) ** 2))
@@ -51,24 +51,26 @@ class ManipulatorEnv(gym.Env):
     
     def step(self, action):
 
-        delta = np.array(action) - 1
         step_size = 0.01
-
+        action1 = action % 3
+        action2 = (action % 9 - action % 3) / 3
+        action3 = (action % 27 - action % 9) / 9
+        action4 = (action - action % 27) / 27
+        delta = np.array([action1, action2, action3, action4], dtype = np.float32) - 1
         self.joint_states += delta * step_size
         self.joint_states = np.clip(self.joint_states, self.lower_limits, self.upper_limits)
         self.steps += 1
 
         time.sleep(0.001)
 
-        reward = 0
         terminated = False
         truncated = False
         distance = np.sqrt(np.sum((self.gripper_state - self.goal_state) ** 2))
-        reward = self.initial_d - distance
-        if distance <= 0.01:
+        reward = -distance
+        if distance <= 1:
             reward = 1000
             terminated = True
-        elif self.steps > 1000:
+        elif self.steps >= 1000:
             truncated = True
         self.initial_d = distance
         
@@ -98,7 +100,7 @@ class GripperPositionNode(Node):
         self.manipulator_env = manipulator_env
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
-        self.timer = self.create_timer(0.001, self.get_gripper_position)
+        self.timer = self.create_timer(0.002, self.get_gripper_position)
 
     def get_gripper_position(self):
         try:
@@ -144,6 +146,7 @@ def main(args=None):
     gripper_position_node = GripperPositionNode(manipulator_env)
     time.sleep(1)
     goal_state_node = GoalStateNode(manipulator_env)
+    time.sleep(1)
 
     executor = rclpy.executors.MultiThreadedExecutor()
     executor.add_node(joint_state_node)
