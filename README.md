@@ -12,7 +12,8 @@
 
 - **Python**
 - **ROS2 Jazzy**
-- **Gazebo Sim Harmonic**
+- **Rviz2**
+<!-- - **Gazebo Sim Harmonic** -->
 
 ## Getting Started
 
@@ -20,7 +21,7 @@
 
 - Python 3.x
 - ROS2 Jazzy
-- Gazebo Sim Harmonic
+<!-- - Gazebo Sim Harmonic -->
 
 ### Installation
 
