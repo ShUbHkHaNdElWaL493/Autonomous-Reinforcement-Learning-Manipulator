@@ -1,0 +1,6 @@
+# Request
+float32[4] joints
+---
+# Response
+bool success
+float32[3] gripper
