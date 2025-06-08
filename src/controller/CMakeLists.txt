@@ -9,7 +9,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(manipulator REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(sensor_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
@@ -18,7 +18,7 @@ find_package(tf2_ros REQUIRED)
 # find_package(<dependency> REQUIRED)
 
 add_executable(ros_bridge_node src/ros_bridge_node.cpp)
-ament_target_dependencies(ros_bridge_node manipulator rclcpp sensor_msgs tf2 tf2_geometry_msgs tf2_ros)
+ament_target_dependencies(ros_bridge_node manipulator rclcpp std_msgs tf2 tf2_geometry_msgs tf2_ros)
 
 install(
   DIRECTORY launch models
@@ -26,7 +26,7 @@ install(
 )
 
 install(
-  PROGRAMS scripts/control_node.py scripts/env_node.py scripts/train_node.py
+  PROGRAMS scripts/control_node.py scripts/definitions.py scripts/train_node.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

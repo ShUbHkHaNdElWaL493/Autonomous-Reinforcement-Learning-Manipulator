@@ -17,7 +17,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 )
 
 install(
-  DIRECTORY config launch models
+  DIRECTORY config launch models worlds
   DESTINATION share/${PROJECT_NAME}
 )
 

@@ -14,30 +14,25 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration("use_sim_time")
 
     spawner_node = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(get_package_share_directory("manipulator"), "launch", "robot.launch.py"))
-    )
-
-    ros_bridge_node = Node(
-        package="controller",
-        executable="ros_bridge_node",
-        parameters=[{"use_sim_time" : use_sim_time}],
-        output="screen"
+        PythonLaunchDescriptionSource(os.path.join(get_package_share_directory("manipulator"), "launch", "robot.launch.py")),
+        launch_arguments = {
+            "use_sim_time" : use_sim_time
+        }.items()
     )
 
     train_node = Node(
-        package="controller",
-        executable="train_node.py",
-        parameters=[{"use_sim_time" : use_sim_time}],
-        output="screen"
+        package = "controller",
+        executable = "train_node.py",
+        parameters = [{"use_sim_time" : use_sim_time}],
+        output = "screen"
     )
 
     return LaunchDescription([
         DeclareLaunchArgument(
             "use_sim_time",
-            default_value = "false",
+            default_value = "true",
             description = "Use simulation (Gazebo) clock if true"
         ),
         spawner_node,
-        ros_bridge_node,
         train_node
     ])

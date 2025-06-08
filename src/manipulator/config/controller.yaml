@@ -1,0 +1,21 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 1000
+
+    forward_position_controller:
+      type: forward_command_controller/ForwardCommandController
+
+forward_position_controller:
+  ros__parameters:
+    joints:
+      - joint_01
+      - joint_23
+      - joint_45
+      - joint_67
+    interface_name: position
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+      - effort
