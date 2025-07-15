@@ -3,7 +3,7 @@
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, ExecuteProcess, IncludeLaunchDescription, RegisterEventHandler
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, RegisterEventHandler
 from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
@@ -36,6 +36,19 @@ def generate_launch_description():
         }]
     )
 
+    joint_state_broadcaster_node = Node(
+        package = "controller_manager",
+        executable = "spawner",
+        arguments = ["joint_state_broadcaster", "-c", "/controller_manager"]
+    )
+
+    rviz_node = Node(
+        package = "rviz2",
+        executable = "rviz2",
+        arguments = ["-d", rviz_config_path],
+        output="screen"
+    )
+
     gz_node = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(ros_gz_sim, "launch", "gz_sim.launch.py")
@@ -59,33 +72,19 @@ def generate_launch_description():
         ]
     )
 
-    bridge_parameters = os.path.join(
-        manipulator,
-        "config",
-        "ros_gz_bridge.yaml"
-    )
-
     ros_gz_bridge_node = Node(
         package = "ros_gz_bridge",
         executable = "parameter_bridge",
-        arguments = [
-            "--ros-args",
-            "-p",
-            f"config_file:={bridge_parameters}"
+        arguments=[
+            "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock",
         ],
         output = "screen"
     )
 
-    forward_position_controller_node = ExecuteProcess(
-        cmd = ["ros2", "control", "load_controller", "--set-state", "active", "forward_position_controller"],
-        output = "screen"
-    )
-
-    rviz_node = Node(
-        package = "rviz2",
-        executable = "rviz2",
-        arguments = ["-d", rviz_config_path],
-        output="screen"
+    joint_trajectory_controller_node = Node(
+        package = "controller_manager",
+        executable = "spawner",
+        arguments = ["joint_trajectory_controller", "-c", "/controller_manager"],
     )
 
     ros_bridge_node = Node(
@@ -123,19 +122,15 @@ def generate_launch_description():
         ),
         RegisterEventHandler(
             event_handler = OnProcessExit(
-                target_action = spawner_node,
-                on_exit = [ros_gz_bridge_node],
-            )
-        ),
-        RegisterEventHandler(
-            event_handler = OnProcessExit(
-                target_action = ros_gz_bridge_node,
-                on_exit = [forward_position_controller_node],
+                target_action = joint_state_broadcaster_node,
+                on_exit = [rviz_node],
             )
         ),
         robot_state_publisher_node,
+        joint_state_broadcaster_node,
         gz_node,
         spawner_node,
-        rviz_node,
+        ros_gz_bridge_node,
+        joint_trajectory_controller_node,
         ros_bridge_node
     ])
