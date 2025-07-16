@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(manipulator)
+project(description)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -17,7 +17,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 )
 
 install(
-  DIRECTORY config launch models worlds
+  DIRECTORY config launch models rviz worlds
   DESTINATION share/${PROJECT_NAME}
 )
 

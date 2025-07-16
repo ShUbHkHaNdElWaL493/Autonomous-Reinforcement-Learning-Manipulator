@@ -6,7 +6,7 @@
 from ament_index_python import get_package_share_directory
 from collections import deque, namedtuple
 import gymnasium as gym
-from manipulator.srv import Gripper
+from description.srv import Gripper
 import numpy as np
 import os
 import random
@@ -50,7 +50,7 @@ class ManipulatorEnv(gym.Env, Node):
     def reset(self, seed = None, options = None):
         super().reset(seed = seed)
         self.joints = np.random.uniform(low = self.lower_limits, high = self.upper_limits, size = (4, )).astype(np.float32)
-        self.goal = np.random.uniform(low = [-0.45, -0.45, 0.4], high = [0.45, 0.45, 0.85], size = (3, )).astype(np.float32)
+        self.goal = np.random.uniform(low = [-0.4, -0.4, 0.4], high = [0.4, 0.4, 0.85], size = (3, )).astype(np.float32)
         self.steps = 0
         self._get_gripper()
         self.initial_d = np.sqrt(np.sum((self.gripper - self.goal) ** 2))
@@ -193,7 +193,7 @@ class DQNAgent:
     
     def save(
         self,
-        path = os.path.abspath(os.path.join(get_package_share_directory("controller"), "..", "..", "..", "..", "src", "controller", "models")),
+        path = os.path.abspath(os.path.join(get_package_share_directory("control"), "..", "..", "..", "..", "src", "control", "models")),
         filename_prefix = "dqn_agent"
     ):
         if not os.path.exists(path):
@@ -207,7 +207,7 @@ class DQNAgent:
     
     def load(
         self,
-        path = os.path.join(get_package_share_directory("controller", "models")),
+        path = os.path.join(get_package_share_directory("control"), "models"),
         filename_prefix = "dqn_agent",
         eval_mode = True
     ):

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(controller)
+project(control)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -7,18 +7,18 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(manipulator REQUIRED)
+find_package(description REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(std_msgs REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
+find_package(trajectory_msgs REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 
-add_executable(ros_bridge_node src/ros_bridge_node.cpp)
-ament_target_dependencies(ros_bridge_node manipulator rclcpp std_msgs tf2 tf2_geometry_msgs tf2_ros)
+add_executable(commander src/commander.cpp)
+ament_target_dependencies(commander description rclcpp tf2 tf2_geometry_msgs tf2_ros trajectory_msgs)
 
 install(
   DIRECTORY launch models
@@ -26,12 +26,12 @@ install(
 )
 
 install(
-  PROGRAMS scripts/control_node.py scripts/definitions.py scripts/train_node.py
+  PROGRAMS scripts/definitions.py scripts/control.py scripts/train.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
 install(
-  TARGETS ros_bridge_node
+  TARGETS commander
   DESTINATION lib/${PROJECT_NAME}
 )
 

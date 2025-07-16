@@ -13,7 +13,7 @@ import xacro
 
 def generate_launch_description():
 
-    manipulator = get_package_share_directory("manipulator")
+    description = get_package_share_directory("description")
     ros_gz_sim = get_package_share_directory("ros_gz_sim")
 
     use_sim_time = LaunchConfiguration("use_sim_time")
@@ -22,9 +22,9 @@ def generate_launch_description():
     y_pose = LaunchConfiguration("y_pose")
     z_pose = LaunchConfiguration("z_pose")
 
-    xacro_file = os.path.join(manipulator, "models", "manipulator.xacro")
+    xacro_file = os.path.join(description, "models", "manipulator.xacro")
     robot_description = xacro.process_file(xacro_file)
-    rviz_config_path = os.path.join(manipulator, "config", "config.rviz")
+    rviz_config_path = os.path.join(description, "rviz", "view.rviz")
 
     robot_state_publisher_node = Node(
         package = "robot_state_publisher",
@@ -87,13 +87,6 @@ def generate_launch_description():
         arguments = ["joint_trajectory_controller", "-c", "/controller_manager"],
     )
 
-    ros_bridge_node = Node(
-        package = "controller",
-        executable = "ros_bridge_node",
-        parameters = [{"use_sim_time" : use_sim_time}],
-        output = "screen"
-    )
-
     return LaunchDescription([
         DeclareLaunchArgument(
             "use_sim_time",
@@ -102,7 +95,7 @@ def generate_launch_description():
         ),
         DeclareLaunchArgument(
             "world",
-            default_value = os.path.join(manipulator, "worlds", "empty_world.sdf"),
+            default_value = os.path.join(description, "worlds", "empty_world.sdf"),
             description = "Specify world for Gazebo simulation"
         ),
         DeclareLaunchArgument(
@@ -131,6 +124,5 @@ def generate_launch_description():
         gz_node,
         spawner_node,
         ros_gz_bridge_node,
-        joint_trajectory_controller_node,
-        ros_bridge_node
+        joint_trajectory_controller_node
     ])

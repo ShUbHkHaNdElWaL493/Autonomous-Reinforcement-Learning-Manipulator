@@ -16,7 +16,7 @@
   <xacro:CYLINDER
   link_name="link_0"
   link_material="blue"
-  link_density="7850"
+  link_density="100000"
   link_length="0.1"
   link_radius="0.2"
   />
