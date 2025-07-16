@@ -42,26 +42,26 @@
 
 4. Build the project using colcon build:
    ```bash
-   colcon build --packages-select manipulator
+   colcon build --packages-select description
    source install/setup.bash
-   colcon build --packages-select controller
+   colcon build --packages-select control
    ```
 
 ### Usage
 
 1. Run the 'train' launch file to train the model:
    ```bash
-   ros2 launch controller train.launch.py
+   ros2 launch control train.launch.py
    ```
 
 2. Build the project again to load the model:
    ```bash
-   colcon build --packages-select controller
+   colcon build --packages-select control
    ```
 
 3. Run the 'control' launch file to control the manipulator based on a given gripper position:
    ```bash
-   ros2 launch controller control.launch.py
+   ros2 launch control control.launch.py
    ```
 
 ## Contributing
