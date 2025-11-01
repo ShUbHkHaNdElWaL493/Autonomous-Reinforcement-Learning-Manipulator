@@ -9,6 +9,5 @@
 
   <xacro:include filename="core.xacro"/>
   <xacro:include filename="gz_sim.xacro"/>
-  <xacro:include filename="ros2_control.xacro"/>
 
 </robot>

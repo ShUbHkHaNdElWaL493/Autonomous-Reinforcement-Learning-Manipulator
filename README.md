@@ -40,11 +40,9 @@
    pip install -r requirements.txt
    ```
 
-4. Build the project using colcon build:
+4. Build the project using the colcon_build.sh script:
    ```bash
-   colcon build --packages-select description
-   source install/setup.bash
-   colcon build --packages-select control
+   ./colcon_build.sh
    ```
 
 ### Usage
@@ -56,7 +54,7 @@
 
 2. Build the project again to load the model:
    ```bash
-   colcon build --packages-select control
+   ./colcon_build.sh
    ```
 
 3. Run the 'control' launch file to control the manipulator based on a given gripper position:
